@@ -12,9 +12,15 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('invoices.index')" :active="request()->routeIs('invoices.*')">
-                        {{ __('Invoices') }}
+                    <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
+                        {{ __('Projects') }}
                     </x-nav-link>
+
+                    @if (auth()->user()->isAdmin() || auth()->user()->isManager())
+                        <x-nav-link :href="route('clients.index')" :active="request()->routeIs('clients.*')">
+                            {{ __('Clients') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 

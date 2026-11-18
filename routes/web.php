@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,5 +37,17 @@ Route::middleware('auth')->group(function () {
     Route::get('invoices/{invoice}/pdf', [InvoiceController::class, 'downloadPdf'])
         ->name('invoices.pdf');
 });
+
+Route::resource('clients', ClientController::class)
+        ->except(['edit', 'update'])
+        ->middleware('role:admin,manager');
+
+    Route::get('projects', [ProjectController::class, 'index'])->name('projects.index');
+    Route::middleware('role:admin,manager')->group(function () {
+        Route::get('projects/create', [ProjectController::class, 'create'])->name('projects.create');
+        Route::post('projects', [ProjectController::class, 'store'])->name('projects.store');
+        Route::patch('projects/{project}/status', [ProjectController::class, 'updateStatus'])->name('projects.status');
+        Route::delete('projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+    });
 
 require __DIR__.'/auth.php';

@@ -47,7 +47,7 @@ class InvoiceController extends Controller
         $this->authorize('create', Invoice::class);
 
         $clients = Client::orderBy('company_name')->get();
-        $projects = Project::orderBy('name')->get();
+        $projects = Project::orderBy('title')->get();
 
         return view('invoices.create', compact('clients', 'projects'));
     }
