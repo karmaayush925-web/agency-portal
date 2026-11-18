@@ -17,7 +17,6 @@ class Client extends Model
         'email',
         'phone',
         'address',
-        'tax_number',
     ];
 
     public function user()
