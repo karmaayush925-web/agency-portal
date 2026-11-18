@@ -21,7 +21,33 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isManager(): bool
+    {
+        return $this->role === 'manager';
+    }
+
+    public function isClient(): bool
+    {
+        return $this->role === 'client';
+    }
+
+    public function clientProfile()
+    {
+        return $this->hasOne(Client::class);
+    }
+
+    public function managedProjects()
+    {
+        return $this->hasMany(Project::class, 'manager_id');
+    }
 
     /**
      * The attributes that should be hidden for serialization.
