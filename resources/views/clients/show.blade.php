@@ -29,8 +29,15 @@
                 <h3 class="text-md font-semibold text-gray-800 mb-3">Projects ({{ $client->projects->count() }})</h3>
                 <ul class="divide-y divide-gray-200 text-sm">
                     @forelse ($client->projects as $project)
-                        <li class="py-3 flex justify-between">
-                            <span>{{ $project->name }}</span>
+                        <li class="py-3 flex justify-between items-center">
+                            <div>
+                                <span class="font-medium text-gray-900">
+                                    {{ $project->title }}
+                                </span>
+                                @if ($project->description)
+                                    <p class="text-xs text-gray-500">{{ Str::limit($project->description, 80) }}</p>
+                                @endif
+                            </div>
                             <span class="font-medium">${{ number_format($project->budget, 2) }} ({{ ucfirst(str_replace('_', ' ', $project->status)) }})</span>
                         </li>
                     @empty

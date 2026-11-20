@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendPaymentReceiptJob;
+use App\Models\ActivityLog;
 use App\Models\Invoice;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -54,6 +56,14 @@ class InvoicePaymentController extends Controller
             'transaction_id' => $transactionId,
             'paid_at' => now(),
         ]);
+
+        ActivityLog::record(
+            'invoice.paid',
+            $invoice,
+            "Invoice {$invoice->invoice_number} paid online via {$validated['payment_method']} (Txn: {$transactionId})."
+        );
+
+        SendPaymentReceiptJob::dispatch($invoice);
 
         return redirect()
             ->route('invoices.show', $invoice)
