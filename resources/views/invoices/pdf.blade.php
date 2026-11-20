@@ -20,6 +20,12 @@
     <div class="header">
         <div class="title">INVOICE: {{ $invoice->invoice_number }}</div>
         <div>Status: <strong>{{ strtoupper($invoice->status) }}</strong></div>
+        @if ($invoice->transaction_id)
+            <div style="color: #15803d; margin-top: 4px;">
+                Transaction ID: <strong>{{ $invoice->transaction_id }}</strong>
+                ({{ strtoupper(str_replace('_', ' ', $invoice->payment_method)) }} — {{ $invoice->paid_at?->format('d M Y') }})
+            </div>
+        @endif
     </div>
 
     <p><strong>Billed To:</strong><br>
