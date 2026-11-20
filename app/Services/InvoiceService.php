@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\ActivityLog;
 use App\Models\Invoice;
 use Illuminate\Support\Facades\DB;
 
@@ -48,6 +49,12 @@ class InvoiceService
             ]);
 
             $invoice->items()->createMany($preparedItems);
+
+            ActivityLog::record(
+                'invoice.created',
+                $invoice,
+                "Created invoice {$invoice->invoice_number} for \${$invoice->total_amount}."
+            );
 
             return $invoice->load(['client', 'project', 'items']);
         });
