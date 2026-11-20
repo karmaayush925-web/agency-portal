@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\InvoicePaymentController;
+use App\Http\Controllers\ActivityLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +20,11 @@ use App\Http\Controllers\ProjectController;
 |
 */
 
+Route::get('invoices/{invoice}/checkout', [InvoicePaymentController::class, 'checkout'])
+        ->name('invoices.checkout');
+    Route::post('invoices/{invoice}/checkout', [InvoicePaymentController::class, 'process'])
+        ->name('invoices.checkout.process');
+        
 Route::get('/', function () {
     return view('welcome');
 });
@@ -25,6 +32,10 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+Route::middleware('role:admin')->group(function () {
+    Route::get('audit-logs', [ActivityLogController::class, 'index'])->name('audit-logs.index');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
