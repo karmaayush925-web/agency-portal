@@ -5,6 +5,11 @@
                 Invoice {{ $invoice->invoice_number }}
             </h2>
             <div class="flex space-x-2">
+                @if ($invoice->status !== 'paid')
+                    <a href="{{ route('invoices.checkout', $invoice) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-md">
+                        Pay Now
+                    </a>
+                @endif
                 <a href="{{ route('invoices.pdf', $invoice) }}" class="bg-gray-800 hover:bg-gray-700 text-white text-sm px-4 py-2 rounded-md">
                     Download PDF
                 </a>
@@ -50,7 +55,14 @@
                     </div>
                     <div class="text-right">
                         <p class="text-sm text-gray-500">Status: <strong class="uppercase text-gray-800">{{ $invoice->status }}</strong></p>
-                        <p class="text-sm text-gray-500">Issue Date: {{ $invoice->issue_date->format('d M Y') }}</p>
+                        @if ($invoice->transaction_id)
+                            <p class="text-xs text-green-700 mt-1">
+                                Paid via <strong>{{ strtoupper(str_replace('_', ' ', $invoice->payment_method)) }}</strong>
+                                | Txn ID: <strong>{{ $invoice->transaction_id }}</strong>
+                                ({{ $invoice->paid_at?->format('d M Y, h:i A') }})
+                            </p>
+                        @endif
+                        <p class="text-sm text-gray-500 mt-1">Issue Date: {{ $invoice->issue_date->format('d M Y') }}</p>
                         <p class="text-sm text-gray-500">Due Date: {{ $invoice->due_date->format('d M Y') }}</p>
                     </div>
                 </div>
